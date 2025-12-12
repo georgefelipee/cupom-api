@@ -1,9 +1,11 @@
 package com.example.cupom_api.controller;
 
 import com.example.cupom_api.dto.CouponRequest;
+import com.example.cupom_api.dto.CupomDTO;
 import com.example.cupom_api.entity.Coupon;
 import com.example.cupom_api.service.CouponService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +15,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/coupons")
@@ -33,9 +37,8 @@ public class CouponController {
                     content = @Content(mediaType = "application/json"))
     })
     @PostMapping
-    public ResponseEntity<Coupon> create(@Valid @RequestBody CouponRequest request) {
-        Coupon saved = couponService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    public CupomDTO create(@Valid @RequestBody CouponRequest request) {
+        return couponService.create(request);
     }
 
     @Operation(summary = "Remove logicamente um cupom", description = "Marca o cupom como DELETED (soft delete)")
