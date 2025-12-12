@@ -4,11 +4,14 @@ import com.example.cupom_api.dto.CouponRequest;
 import com.example.cupom_api.entity.Coupon;
 import com.example.cupom_api.entity.CouponStatus;
 import com.example.cupom_api.repository.CouponRepository;
+import jakarta.validation.Valid;
 import java.math.RoundingMode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 public class CouponService {
 
     private final CouponRepository couponRepository;
@@ -18,7 +21,7 @@ public class CouponService {
     }
 
     @Transactional
-    public Coupon create(CouponRequest request) {
+    public Coupon create(@Valid CouponRequest request) {
         String sanitizedCode = request.getSanitizedCode();
 
         Coupon coupon = new Coupon();
