@@ -7,26 +7,25 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class CouponRequest {
 
-    @NotBlank
-    @Size(min = 1, max = 20)
+    @NotBlank(message = "Codigo do cupom e obrigatorio")
+    @Size(min = 1, max = 20, message = "Codigo do cupom deve ter entre 1 e 20 caracteres antes do saneamento")
     private String code;
 
-    @NotBlank
-    @Size(min = 1, max = 255)
+    @NotBlank(message = "Descricao e obrigatoria")
+    @Size(min = 1, max = 255, message = "Descricao deve ter entre 1 e 255 caracteres")
     private String description;
 
-    @NotNull
-    @DecimalMin(value = "0.5")
+    @NotNull(message = "Valor de desconto e obrigatorio")
+    @DecimalMin(value = "0.5", message = "Valor de desconto deve ser no minimo 0.5")
     private BigDecimal discountValue;
 
-    @NotNull
-    @FutureOrPresent
+    @NotNull(message = "Data de expiracao e obrigatoria")
+    @FutureOrPresent(message = "Data de expiracao nao pode estar no passado")
     private LocalDate expirationDate;
 
     private boolean published;
@@ -48,7 +47,7 @@ public class CouponRequest {
         this.published = published;
     }
 
-    @AssertTrue(message = "Código do cupom deve conter exatamente 6 caracteres alfanuméricos após remover caracteres especiais")
+    @AssertTrue(message = "Codigo do cupom deve conter exatamente 6 caracteres alfanumericos apos remover caracteres especiais")
     public boolean isSanitizedCodeValid() {
         return CodeSanitizer.isValid(getSanitizedCode());
     }
