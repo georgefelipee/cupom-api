@@ -7,10 +7,6 @@ import com.example.cupom_api.repository.CouponRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.cupom_api.shared.CodeSanitizer;
 import jakarta.validation.Validation;
@@ -24,6 +20,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -173,5 +171,42 @@ class CouponServiceTest {
 
     }
 
+    @Nested
+    class DeleteCouponTests {
 
+        @Test
+        @DisplayName("Deve deletar um cupom com sucesso alterando seu status para deleted ")
+        void deveDeletarCupomComSucesso() {
+            var coupon = new Coupon(
+                    1L,
+                    "ABC123",
+                    "Cupom de teste",
+                    BigDecimal.valueOf(10.0),
+                    LocalDate.now().plusDays(1),
+                    true,
+                    CouponStatus.ACTIVE
+            );
+
+            when(couponRepository.findByIdAndStatusNot(1L, CouponStatus.DELETED))
+                    .thenReturn(java.util.Optional.of(coupon));
+            when(couponRepository.save(couponArgumentCaptor.capture()))
+                    .thenReturn(coupon);
+
+            couponService.deleteById(1L);
+
+            assertEquals(CouponStatus.DELETED, couponArgumentCaptor.getValue().getStatus());
+
+        }
+
+        @Test
+        @DisplayName("Deve lancar IllegalArgumentException ao tentar deletar um cupom inexistente")
+        void deveLancarErroAoDeletarCupomInexistente() {
+            when(couponRepository.findByIdAndStatusNot(1L, CouponStatus.DELETED))
+                    .thenReturn(java.util.Optional.empty());
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                couponService.deleteById(1L);
+            });
+        }
+    }
 }
