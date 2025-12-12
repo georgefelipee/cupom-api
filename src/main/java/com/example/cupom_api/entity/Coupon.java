@@ -17,10 +17,10 @@ import java.util.Objects;
 public class Coupon {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 6)
+    @Column(nullable = false, length = 6)
     private String code;
 
     @Column(nullable = false)
